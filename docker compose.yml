@@ -1,1 +1,26 @@
 services:
+
+  postgres:
+    image: postgres:17.5
+    container_name: mybike
+    ports:
+      - "5440:5432"
+    env_file:
+      - env/postgres.env
+    volumes:
+      - mybike_pg_data
+    networks:
+      - mybike_network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_mybike
+    restart: always
+    env_file:
+      - env/pgadmin.env
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - "5051:80"
+    networks:
+      - mybike_network
