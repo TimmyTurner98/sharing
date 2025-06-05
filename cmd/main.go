@@ -7,15 +7,15 @@ import (
 	"github.com/TimmyTurner98/sharing/pkg/handler"
 	"github.com/TimmyTurner98/sharing/pkg/repository"
 	"github.com/TimmyTurner98/sharing/pkg/service"
-	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	_ "github.com/lib/pq"
 	"github.com/sirupsen/logrus"
 )
 
 func main() {
 	logrus.SetFormatter(new(logrus.JSONFormatter))
 
-	if err := godotenv.Load(); err != nil {
+	if err := godotenv.Load("env/app.env"); err != nil {
 		logrus.Fatalf("error loading env variables: %s", err.Error())
 	}
 
@@ -36,7 +36,7 @@ func main() {
 	services := service.NewService(repos)
 	handlers := handler.NewHandler(services)
 
-	router := gin.Default()
+	router := handlers.InitRoutes()
 
 	s := &sharing.Server{}
 
