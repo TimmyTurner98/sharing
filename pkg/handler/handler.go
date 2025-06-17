@@ -20,6 +20,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	{
 		apiV1 := router.Group("api/v1")
 		apiV1.POST("/login", testhandler)
+		apiV1.POST("/sign-up", h.CreateUser)
 	}
 
 	return router

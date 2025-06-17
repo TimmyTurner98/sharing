@@ -4,11 +4,8 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type Authorization interface {
-}
-
 type Repository struct {
-	Auth Authorization
+	Auth *AuthPostgres
 }
 
 func NewRepository(db *sqlx.DB) *Repository {

@@ -40,7 +40,7 @@ func main() {
 
 	s := &sharing.Server{}
 
-	if err := s.Run("8080", router); err != nil {
+	if err := s.Run("8081", router); err != nil {
 		logrus.Fatalf("Ошибка запуска сервера: %s", err.Error())
 	}
 

@@ -2,8 +2,12 @@ package service
 
 import "github.com/TimmyTurner98/sharing/pkg/repository"
 
-type Service struct{}
+type Service struct {
+	Auth *AuthService
+}
 
 func NewService(repos *repository.Repository) *Service {
-	return &Service{}
+	return &Service{
+		Auth: NewAuthService(repos.Auth),
+	}
 }
