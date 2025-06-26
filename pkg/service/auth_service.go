@@ -16,3 +16,4 @@ func NewAuthService(repo *repository.AuthPostgres) *AuthService {
 func (s *AuthService) CreateUser(user models.UserRegister) (int, error) {
 	return s.repo.CreateUser(user)
 }
+
