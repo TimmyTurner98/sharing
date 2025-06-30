@@ -21,7 +21,7 @@ services:
     volumes:
       - pgadmin_data:/var/lib/pgadmin
     ports:
-      - "5051:80"
+      - "5051:5051"
     networks:
       - mybike_network
 
