@@ -32,7 +32,14 @@ func main() {
 		logrus.Fatalf("failed to initialize db: %s", err.Error())
 	}
 
-	repos := repository.NewRepository(db)
+	err = godotenv.Load("env/redis.env")
+	if err != nil {
+		logrus.Fatalf("failed to load redisenv variables: %s", err.Error())
+	}
+	redisCfg := repository.LoadRedisConfig()
+	redisClient := repository.NewRedisClient(redisCfg)
+
+	repos := repository.NewRepository(db, redisClient)
 	services := service.NewService(repos)
 	handlers := handler.NewHandler(services)
 
