@@ -7,12 +7,12 @@ import (
 
 type Repository struct {
 	Auth  *AuthPostgres
-	Redis *redis.Client
+	Redis *AuthRedis
 }
 
-func NewRepository(db *sqlx.DB, redisClient *redis.Client) *Repository {
+func NewRepository(db *sqlx.DB, rdb *redis.Client) *Repository {
 	return &Repository{
 		Auth:  NewAuthPostgres(db),
-		Redis: redisClient,
+		Redis: NewAuthRedis(rdb),
 	}
 }

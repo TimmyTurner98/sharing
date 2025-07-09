@@ -1,9 +1,10 @@
 package repository
 
 import (
-	"github.com/redis/go-redis/v9"
 	"os"
 	"strconv"
+
+	"github.com/redis/go-redis/v9"
 )
 
 type RedisConfig struct {

@@ -3,16 +3,14 @@ package repository
 import (
 	"github.com/TimmyTurner98/sharing/models"
 	"github.com/jmoiron/sqlx"
-	"github.com/redis/go-redis/v9"
 )
 
 type AuthPostgres struct {
-	db  *sqlx.DB
-	rdb *redis.Client
+	db *sqlx.DB
 }
 
-func NewAuthPostgres(db *sqlx.DB, rdb *redis.Client) *AuthPostgres {
-	return &AuthPostgres{db: db, rdb: rdb}
+func NewAuthPostgres(db *sqlx.DB) *AuthPostgres {
+	return &AuthPostgres{db: db}
 }
 
 func (r *AuthPostgres) CreateUser(user models.UserRegister) (int, error) {

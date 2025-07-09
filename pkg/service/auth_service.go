@@ -14,8 +14,8 @@ type AuthService struct {
 	redis *redis.Client
 }
 
-func NewAuthService(repo *repository.AuthPostgres, reporedis *repository.RedisConfig) *AuthService {
-	return &AuthService{repo: repo, reporedis: reporedis}
+func NewAuthService(repo *repository.AuthPostgres, redis *repository.AuthPostgres) *AuthService {
+	return &AuthService{repo: repo, redis: redis}
 }
 
 var ErrInvalidNumber = errors.New("invalid phone number format")
