@@ -2,17 +2,20 @@ package service
 
 import (
 	"errors"
+	"regexp"
+
 	"github.com/TimmyTurner98/sharing/models"
 	"github.com/TimmyTurner98/sharing/pkg/repository"
-	"regexp"
+	"github.com/redis/go-redis/v9"
 )
 
 type AuthService struct {
-	repo *repository.AuthPostgres
+	repo  *repository.AuthPostgres
+	redis *redis.Client
 }
 
-func NewAuthService(repo *repository.AuthPostgres) *AuthService {
-	return &AuthService{repo: repo}
+func NewAuthService(repo *repository.AuthPostgres, reporedis *repository.RedisConfig) *AuthService {
+	return &AuthService{repo: repo, reporedis: reporedis}
 }
 
 var ErrInvalidNumber = errors.New("invalid phone number format")
