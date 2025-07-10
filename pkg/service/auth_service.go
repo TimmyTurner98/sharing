@@ -6,15 +6,14 @@ import (
 
 	"github.com/TimmyTurner98/sharing/models"
 	"github.com/TimmyTurner98/sharing/pkg/repository"
-	"github.com/redis/go-redis/v9"
 )
 
 type AuthService struct {
 	repo  *repository.AuthPostgres
-	redis *redis.Client
+	redis *repository.AuthRedis
 }
 
-func NewAuthService(repo *repository.AuthPostgres, redis *repository.AuthPostgres) *AuthService {
+func NewAuthService(repo *repository.AuthPostgres, redis *repository.AuthRedis) *AuthService {
 	return &AuthService{repo: repo, redis: redis}
 }
 
