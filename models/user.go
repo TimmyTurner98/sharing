@@ -8,9 +8,8 @@ type User struct {
 	Password string
 }
 
-type UserRegister struct {
+type UserSignUp struct {
 	Username string `json:"username"`
 	Number   string `json:"number" binding:"required"`
 	Email    string `json:"email"`
-	Password string `json:"password" binding:"required"`
 }

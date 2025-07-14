@@ -19,11 +19,11 @@ func NewAuthService(repo *repository.AuthPostgres, redis *repository.AuthRedis) 
 
 var ErrInvalidNumber = errors.New("invalid phone number format")
 
-func (s *AuthService) CreateUser(user models.UserRegister) (int, error) {
+func (s *AuthService) SendCode(user models.UserSignUp) (int, error) {
 	if !isValidKZNumber(user.Number) {
 		return 0, ErrInvalidNumber
 	}
-	return s.repo.CreateUser(user)
+	return s.repo.SignUp(user)
 }
 
 func isValidKZNumber(kzNumber string) bool {
