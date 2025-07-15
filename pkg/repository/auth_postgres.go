@@ -1,7 +1,8 @@
 package repository
 
 import (
-	"github.com/TimmyTurner98/sharing/models"
+	"database/sql"
+
 	"github.com/jmoiron/sqlx"
 )
 
@@ -13,18 +14,21 @@ func NewAuthPostgres(db *sqlx.DB) *AuthPostgres {
 	return &AuthPostgres{db: db}
 }
 
-func (r *AuthPostgres) SignUp(user models.UserSignUp) (int, error) {
-	var email interface{}
-	if user.Email == "" {
-		email = nil // ← это важно
-	} else {
-		email = user.Email
+func (r *AuthPostgres) GetUserByNumber(number string) error {
+	var exists bool
+	err := r.db.QueryRow(`SELECT EXISTS (SELECT 1 FROM users WHERE number = $1)`, number).Scan(&exists)
+	if err != nil {
+		return err
 	}
-
-	// var id int
-	// err := r.db.QueryRow(`INSERT INTO users (username, password, number, email) VALUES ($1, $2, $3, $4) RETURNING id`, user.Username, user.Password, user.Number, email).Scan(&id)
-	// if err != nil {
-	// 	return 0, err
-	// }
-	// return id, nil
+	if !exists {
+		return sql.ErrNoRows
+	}
+	return nil
 }
+
+// var id int
+// err := r.db.QueryRow(`INSERT INTO users (username, password, number, email) VALUES ($1, $2, $3, $4) RETURNING id`, user.Username, user.Password, user.Number, email).Scan(&id)
+// if err != nil {
+// 	return 0, err
+// }
+// return id, nil
