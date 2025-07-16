@@ -1,6 +1,7 @@
 package service
 
 import (
+	"database/sql"
 	"errors"
 	"regexp"
 
@@ -19,12 +20,19 @@ func NewAuthService(repo *repository.AuthPostgres, redis *repository.AuthRedis) 
 
 var ErrInvalidNumber = errors.New("invalid phone number format")
 
-func (s *AuthService) SendCode(user models.UserSignUp) (int, error) {
+func (s *AuthService) SendCode(user models.UserSignUp) error {
 	if !isValidKZNumber(user.Number) {
-		return 0, ErrInvalidNumber
+		return ErrInvalidNumber
 	}
-	return s.repo.SignUp(user)
+	err := s.repo.GetUserByNumber(user.Number)
+	if errors.Is(err, sql.ErrNoRows) {
+		return s.repo.CreateUser(user)
+	} else if err != nil {
+		return err
+	}
+	return nil
 }
+
 
 func isValidKZNumber(kzNumber string) bool {
 	r := regexp.MustCompile(`^\+7(7\d{9})$`)
