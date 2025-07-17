@@ -3,6 +3,7 @@ package service
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"regexp"
 
 	"github.com/TimmyTurner98/sharing/models"
@@ -26,13 +27,17 @@ func (s *AuthService) SendCode(user models.UserSignUp) error {
 	}
 	err := s.repo.GetUserByNumber(user.Number)
 	if errors.Is(err, sql.ErrNoRows) {
-		return s.repo.CreateUser(user)
-	} else if err != nil {
-		return err
+		if err := s.repo.CreateUser(user.Number); err != nil {
+			return err
+		}
 	}
-	return nil
-}
 
+	code := generateSMSCode()
+	fmt.Println("Generated code:", code)
+
+	return nil
+
+}
 
 func isValidKZNumber(kzNumber string) bool {
 	r := regexp.MustCompile(`^\+7(7\d{9})$`)

@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"database/sql"
-
 	"github.com/jmoiron/sqlx"
 )
 
@@ -21,7 +19,7 @@ func (r *AuthPostgres) GetUserByNumber(number string) error {
 		return err
 	}
 	if !exists {
-		return sql.ErrNoRows
+		return r.CreateUser(number)
 	}
 	return nil
 }

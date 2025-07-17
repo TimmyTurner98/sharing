@@ -17,7 +17,7 @@ func (h *Handler) SendCode(c *gin.Context) {
 		return
 	}
 
-	id, err := h.services.Auth.SignUp(input)
+	err := h.services.Auth.SendCode(input)
 	if errors.Is(err, service.ErrInvalidNumber) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid phone number format"})
 		return
@@ -27,6 +27,5 @@ func (h *Handler) SendCode(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create user"})
 		return
 	}
-
-	c.JSON(http.StatusOK, gin.H{"id": id})
+	c.JSON(http.StatusOK, gin.H{"message": "verification code sent"})
 }
