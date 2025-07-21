@@ -13,3 +13,8 @@ type UserSignUp struct {
 	Number   string `json:"number" binding:"required"`
 	Email    string `json:"email"`
 }
+
+type VerifyCode struct {
+	Number string `json:"number"`
+	Code   string `json:"code"`
+}
