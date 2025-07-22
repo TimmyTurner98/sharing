@@ -1,12 +1,13 @@
 package service
 
 import (
+	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var jwtSecret = []byte("your-secret-key") // Храни в .env
+var jwtSecret = []byte(os.Getenv("JWT_SECRET"))
 
 // Генерация access-токена (на 15 минут)
 func GenerateAccessToken(phone string) (string, error) {
