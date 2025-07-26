@@ -19,8 +19,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 	{
 		apiV1 := router.Group("api/v1")
-		apiV1.POST("/login", testhandler)
-		apiV1.POST("/send-code", h.SendCode)
+		apiV1.POST("/test", testhandler)
+		apiV1.POST("/login", h.SendCode)
 		apiV1.POST("/verify", h.VerifyCode)
 	}
 

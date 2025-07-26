@@ -16,15 +16,18 @@ func NewAuthRedis(rdb *redis.Client) *AuthRedis {
 }
 
 func (r *AuthRedis) SaveCode(number string, code string) error {
-	return r.rdb.Set(context.Background(), number, code, 2*time.Minute).Err()
+	key := "code:" + number
+	return r.rdb.Set(context.Background(), key, code, 2*time.Minute).Err()
 }
 
 func (r *AuthRedis) GetCode(number string) (string, error) {
-	return r.rdb.Get(context.Background(), number).Result()
+	key := "code:" + number
+	return r.rdb.Get(context.Background(), key).Result()
 }
 
 func (r *AuthRedis) DeleteCode(number string) error {
-	return r.rdb.Del(context.Background(), number).Err()
+	key := "code:" + number
+	return r.rdb.Del(context.Background(), key).Err()
 }
 
 func (r *AuthRedis) SaveRefreshToken(phone string, token string) error {

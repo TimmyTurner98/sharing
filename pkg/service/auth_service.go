@@ -23,11 +23,17 @@ var ErrInvalidNumber = errors.New("invalid phone number format")
 
 func (s *AuthService) SendCode(user models.UserSignUp) error {
 	if !isValidKZNumber(user.Number) {
+
 		return ErrInvalidNumber
 	}
-	err := s.repo.GetUserByNumber(user.Number)
-	if errors.Is(err, sql.ErrNoRows) {
-		if err := s.repo.CreateUser(user.Number); err != nil {
+
+	_, err := s.repo.GetUserByNumber(user.Number)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			if err := s.repo.CreateUser(user.Number); err != nil {
+				return err
+			}
+		} else {
 			return err
 		}
 	}
@@ -35,11 +41,7 @@ func (s *AuthService) SendCode(user models.UserSignUp) error {
 	code := generateSMSCode()
 	fmt.Println("Generated code:", code)
 
-	err = s.redis.SaveCode(user.Number, code)
-	if err != nil {
-		return err
-	}
-	return nil
+	return s.redis.SaveCode(user.Number, code)
 }
 
 func isValidKZNumber(kzNumber string) bool {
@@ -63,12 +65,16 @@ func (s *AuthService) VerifyCode(number string, inputCode string) (string, strin
 	_ = s.redis.DeleteCode(number)
 
 	// 4. Генерируем access и refresh токены
-	accessToken, err := GenerateAccessToken(number)
+	userId, err := s.repo.GetUserByNumber(number)
+	if err != nil {
+		return "", "", err
+	}
+	accessToken, err := GenerateAccessToken(userId)
 	if err != nil {
 		return "", "", err
 	}
 
-	refreshToken, err := GenerateRefreshToken(number)
+	refreshToken, err := GenerateRefreshToken(userId)
 	if err != nil {
 		return "", "", err
 	}

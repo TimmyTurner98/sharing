@@ -12,25 +12,18 @@ func NewAuthPostgres(db *sqlx.DB) *AuthPostgres {
 	return &AuthPostgres{db: db}
 }
 
-func (r *AuthPostgres) GetUserByNumber(number string) error {
-	var exists bool
-	err := r.db.QueryRow(`SELECT EXISTS (SELECT 1 FROM users WHERE number = $1)`, number).Scan(&exists)
+func (r *AuthPostgres) GetUserByNumber(number string) (int, error) {
+	var id int
+	err := r.db.QueryRow(`SELECT id FROM users WHERE number = $1`, number).Scan(&id)
 	if err != nil {
-		return err
+		return 0, err
 	}
-	if !exists {
-		return r.CreateUser(number)
-	}
-	return nil
+	return id, nil
 }
 
 func (r *AuthPostgres) CreateUser(number string) error {
-	var id int
-	err := r.db.QueryRow(`INSERT INTO users (number) VALUES ($1) RETURNING id`, number).Scan(&id)
-	if err != nil {
-		return err
-	}
-	return nil
+	_, err := r.db.Exec(`INSERT INTO users (number) VALUES ($1)`, number)
+	return err
 }
 
 // var id int
