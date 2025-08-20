@@ -30,7 +30,8 @@ func (s *AuthService) SendCode(user models.UserSignUp) error {
 	_, err := s.repo.GetUserByNumber(user.Number)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			if err := s.repo.CreateUser(user.Number); err != nil {
+			_, err := s.repo.CreateUser(user.Number)
+			if err != nil {
 				return err
 			}
 		} else {
@@ -80,7 +81,7 @@ func (s *AuthService) VerifyCode(number string, inputCode string) (string, strin
 	}
 
 	// 5. Сохраняем refresh токен в Redis
-	err = s.redis.SaveRefreshToken(number, refreshToken)
+	err = s.redis.SaveRefreshToken(userId, refreshToken)
 	if err != nil {
 		return "", "", err
 	}

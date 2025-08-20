@@ -18,3 +18,7 @@ type VerifyCode struct {
 	Number string `json:"number"`
 	Code   string `json:"code"`
 }
+
+type RefreshInput struct {
+	RefreshToken string `json:"refresh_token" binding:"required"`
+}

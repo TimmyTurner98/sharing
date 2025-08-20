@@ -22,6 +22,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		apiV1.POST("/test", testhandler)
 		apiV1.POST("/login", h.SendCode)
 		apiV1.POST("/verify", h.VerifyCode)
+		apiV1.POST("/refresh", h.Refresh)
 	}
 
 	return router

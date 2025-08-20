@@ -21,9 +21,14 @@ func (r *AuthPostgres) GetUserByNumber(number string) (int, error) {
 	return id, nil
 }
 
-func (r *AuthPostgres) CreateUser(number string) error {
-	_, err := r.db.Exec(`INSERT INTO users (number) VALUES ($1)`, number)
-	return err
+func (r *AuthPostgres) CreateUser(number string) (int, error) {
+	var id int
+	err := r.db.QueryRow(`INSERT INTO users (number) VALUES ($1) returning id`, number).Scan(&id)
+	if err != nil {
+		return 0, err
+	}
+
+	return id, nil
 }
 
 // var id int
