@@ -44,6 +44,11 @@ func (s *AuthService) RefreshTokens(input models.RefreshInput) (string, string, 
 		return "", "", err
 	}
 
+	err = s.redis.SaveRefreshToken(userId, newRefresh)
+	if err != nil {
+		return "", "", err
+	}
+
 	// 3. Возвращаем
 	return newAccess, newRefresh, nil
 
