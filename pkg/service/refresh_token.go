@@ -33,7 +33,16 @@ func (s *AuthService) RefreshTokens(input models.RefreshInput) (string, string, 
 		return "", "", err
 	}
 
-	// 2. Генерируем новые токены
+	// 2. Проверяем токен есть ли такое в редисе
+
+	token, err := s.redis.GetRefreshToken(userId)
+	if err != nil {
+		return "", "", err
+	}
+	if token != input.RefreshToken {
+		return "", "", errors.New("invalid refresh token")
+	}
+
 	newAccess, err := GenerateAccessToken(userId)
 	if err != nil {
 		return "", "", err
@@ -49,7 +58,6 @@ func (s *AuthService) RefreshTokens(input models.RefreshInput) (string, string, 
 		return "", "", err
 	}
 
-	// 3. Возвращаем
 	return newAccess, newRefresh, nil
 
 }
