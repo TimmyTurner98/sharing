@@ -8,6 +8,6 @@ type Service struct {
 
 func NewService(repos *repository.Repository) *Service {
 	return &Service{
-		Auth: NewAuthService(repos.Auth),
+		Auth: NewAuthService(repos.Auth, repos.Redis),
 	}
 }

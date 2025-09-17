@@ -32,7 +32,16 @@ func main() {
 		logrus.Fatalf("failed to initialize db: %s", err.Error())
 	}
 
-	repos := repository.NewRepository(db)
+	if err := godotenv.Load("env/redis.env"); err != nil {
+		logrus.Fatalf("failed to load redisenv variables: %s", err.Error())
+	}
+	if err := godotenv.Load("env/jwt_secret.env"); err != nil {
+		logrus.Fatalf("failed to load jwtsecretenv variables: %s", err.Error())
+	}
+	redisCfg := repository.LoadRedisConfig()
+	redisClient := repository.NewRedisClient(redisCfg)
+
+	repos := repository.NewRepository(db, redisClient)
 	services := service.NewService(repos)
 	handlers := handler.NewHandler(services)
 
